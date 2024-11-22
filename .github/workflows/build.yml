@@ -11,9 +11,24 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
+    - uses: actions/checkout@v4
+    - name: Create dependency repos file
+      shell: bash
+      run: |
+        cat << 'EOF' > /tmp/deps.repos
+        {"repositories":
+          {"rmw_implementation":
+            {"type": "git",
+             "url": "https://github.com/BonsaiRobotics/rmw_implementation",
+             "version": "humble-bonsai"
+            }
+          }
+        }
+        EOF
     - uses: ros-tooling/action-ros-ci@v0.3
       with:
         target-ros2-distro: humble
+        vcs-repo-file-url: /tmp/deps.repos
         colcon-defaults: |
           {
             "build": {
@@ -31,9 +46,24 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-noble-latest
     steps:
+    - uses: actions/checkout@v4
+    - name: Create dependency repos file
+      shell: bash
+      run: |
+        cat << 'EOF' > /tmp/deps.repos
+        {"repositories":
+          {"rmw_implementation":
+            {"type": "git",
+             "url": "https://github.com/BonsaiRobotics/rmw_implementation",
+             "version": "jazzy-bonsai"
+            }
+          }
+        }
+        EOF
     - uses: ros-tooling/action-ros-ci@v0.3
       with:
         target-ros2-distro: jazzy
+        vcs-repo-file-url: /tmp/deps.repos
         colcon-defaults: |
           {
             "build": {
