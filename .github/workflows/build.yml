@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
+    env:
+      ROS_DISTRO: humble
     steps:
     - uses: actions/checkout@v4
     - name: Create dependency repos file
@@ -45,6 +47,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rostooling/setup-ros-docker:ubuntu-noble-latest
+    env:
+      ROS_DISTRO: jazzy
     steps:
     - uses: actions/checkout@v4
     - name: Create dependency repos file
