@@ -42,6 +42,8 @@ jobs:
       with:
         target-ros2-distro: ${{ matrix.ros }}
         vcs-repo-file-url: /tmp/deps.repos
+        # Not testing rmw_implementation here, with the expectation it's tested at its own home
+        package-name: rmw_stats_shim rosgraph_monitor rosgraph_monitor_msgs telegraf_bridge
         colcon-defaults: |
           {
             "build": {
