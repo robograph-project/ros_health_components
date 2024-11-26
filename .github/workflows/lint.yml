@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        linter: [copyright, xmllint, cppcheck, cpplint, clang_format]
+        linter: [copyright, xmllint, cppcheck, cpplint]
         include:
           - linter: clang_format
             arguments: "--config rosbag2_storage_mcap/.clang-format"
