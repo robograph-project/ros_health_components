@@ -36,6 +36,9 @@ find_package(rosgraph_monitor_msgs REQUIRED)
 if("$ENV{ROS_DISTRO}" STREQUAL "jazzy")
   add_compile_definitions("-DROS2_JAZZY")
 endif()
+if("$ENV{ROS_DISTRO}" STREQUAL "rolling")
+  add_compile_definitions("-DROS2_JAZZY")
+endif()
 
 # Library
 add_library(${PROJECT_NAME} SHARED
