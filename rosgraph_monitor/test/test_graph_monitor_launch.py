@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import threading
 import time
 import unittest
@@ -27,12 +28,6 @@ import rclpy
 from rclpy.duration import Duration
 from rclpy.qos import QoSProfile
 from std_msgs.msg import Bool
-
-
-qos_profile_with_deadline = QoSProfile(
-    depth=10,
-    deadline=Duration(seconds=0, nanoseconds=100000000)
-)
 
 
 @pytest.mark.launch_test
@@ -75,8 +70,12 @@ class TestProcessOutput(unittest.TestCase):
         self.executor.add_node(self.publisher_node)
         self.executor.add_node(self.subscriber_node)
 
-        self.dummy_publisher = self.publisher_node.create_publisher(
-            Bool, '/bool_publisher', qos_profile_with_deadline)
+        if os.environ.get('RMW_IMPLEMENTATION_WRAPPER') == 'rmw_stats_shim':
+            qos = QoSProfile(depth=10, deadline=Duration(seconds=0.1))
+        else:
+            qos = QoSProfile(depth=10)
+
+        self.dummy_publisher = self.publisher_node.create_publisher(Bool, '/bool_publisher', qos)
         timer_period = 0.1  # seconds
         self.publishr_timer = self.publisher_node.create_timer(
             timer_period, self.publisher_callback)
@@ -105,6 +104,16 @@ class TestProcessOutput(unittest.TestCase):
         end_time = time.time() + 5
         while time.time() < end_time:
             rclpy.spin_once(self.publisher_node, timeout_sec=0.1)
+
+        self.assertGreaterEqual(
+            len(self.diagnostics_agg_msgs),
+            1, 'There should be at least one /diagnostics_agg message')
+
+        last_msg = self.diagnostics_agg_msgs[-1]
+        self.assertTrue(
+            all(int.from_bytes(
+                status.level, byteorder='big') == 0 for status in last_msg.status),
+            'All diagnostic statuses should be healthy')
 
         self.subscriber_node.destroy_subscription(sub)
 
