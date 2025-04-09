@@ -1,5 +1,10 @@
 # ROS 2 Health Monitoring Components
 
+> [!CAUTION]
+> This repository has been archived in favor of using https://github.com/ros-tooling/graph-monitor
+> The packages `rmw_stats_shim`, `rosgraph_monitor`, and `rosgraph_monitor_msgs` now are maintained at that new location.
+> `telegraf_bridge` does not yet have a new home, but will not be moved forward here.
+
 A collection of packages for monitoring the health of an entire ROS 2 application.
 
 As presented at ROSCon 2024 in "ROS robot health monitoring, the Bonsai approach": https://vimeo.com/1024971769
